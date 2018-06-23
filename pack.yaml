@@ -1,0 +1,16 @@
+---
+ref: go-netconf
+name : go-netconf
+description : Go NETCONF pack for ST2
+keywords :
+  - netconf
+  - networking
+  - go
+version : 0.0.1
+author : ripe-inog-hacktahon
+email : dontemailme@here.doesntexist
+contributors:
+  - Rene Neumann <rene.neumann@gmail.com>
+  - Patrick Harney <patrick.harney@gmail.com>
+  - David Gee <david.gee@ipengineer.net>
+  - Tudor Tabacel <tudorsmt@gmail.com>
