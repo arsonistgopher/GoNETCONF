@@ -1,6 +1,6 @@
 ---
-ref: go-netconf
-name : go-netconf
+ref: gonetconf
+name: gonetconf
 description : Go NETCONF pack for ST2
 keywords :
   - netconf
