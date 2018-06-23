@@ -1,14 +1,13 @@
 name: "get_netconf"
-runner_type: "python-script"
+runner_type: "local-shell-script"
 description: "Get Netconf Configuration"
 enabled: true
-entry_point: "gonetconf.py"
+entry_point: "gonetconf"
 parameters:
-      target_ip:
+      targethost:
         type: "string"
         description: "IP Address of the target device"
         required: true
-        position: 0
       transport:
         type: "string"
         enum:
@@ -17,31 +16,29 @@ parameters:
         description: "transport mechanism to be used"
         required: true
         default: "ssh"
-        position: 1
       port:
         type: "integer"
         description: "Port which will be used for the netconf call"
         required: true
         default: 22
-        position: 2
       envelope:
         type: "string"
         description: "Netconf data envelope"
         required: true
-        position: 3
       username:
         type: "string"
         description: "Login user name to connect to the device"
         required: false
-        position: 4
       password:
         type: string
         description: "Login password to connect to the device"
         required: false
-        position: 5
-      ssh_key:
+      sshkey:
         type: string
         description: "Path to a ssh_key used to authenticated"
         required: false
-        default: "~/.ssh/id_rsa.pub"
-        position: 6
+        default: "~/.ssh/id_rsa.pub" 
+      kwarg_op:
+        type: "string"
+        immutable: true
+        default: "-"
