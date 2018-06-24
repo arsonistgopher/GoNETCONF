@@ -26,7 +26,7 @@ parameters:
         type: "string"
         description: "Netconf data envelope"
         required: false
-      envelope_file:
+      envelopefile:
         type: "string"
         description: "Netconf data envelope file location"
         required: false
@@ -43,7 +43,7 @@ parameters:
         description: "Path to a ssh_key used to authenticated"
         required: false
         default: "~/.ssh/id_rsa.pub"
-      clean_output:
+      cleanoutput:
         type: boolean
         description: "Clean the xml output from whitspaces and line returns"
         required: false

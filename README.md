@@ -43,7 +43,6 @@ _Workflow Parameters_
 
 _Workflow Steps_
 - get_netconf_information
-- strip_new_line_chars
 - convert_xml_to_json
 
 _Example_
@@ -90,7 +89,6 @@ _Workflow Parameters_
 
 _Workflow Steps_
 - set_netconf_information
-- strip_new_line_chars
 - convert_xml_to_json
 
 
