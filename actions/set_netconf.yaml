@@ -1,9 +1,8 @@
-description: Get netconf information
+name: "set_netconf"
+runner_type: "local-shell-script"
+description: "Set Netconf Configuration"
 enabled: true
-runner_type: mistral-v2
-entry_point: workflows/get_netconf_workflow.yaml
-name: getworkflow
-pack: gonetconf
+entry_point: "gonetconf"
 parameters:
       targethost:
         type: "string"
@@ -48,3 +47,21 @@ parameters:
         description: "Clean the xml output from whitspaces and line returns"
         required: false
         default: true
+      lock:
+        type: boolean
+        description: "Lock Datastore"
+        required: false
+        default: false
+      datastore:
+        type: "string"
+        enum:
+          - startup
+          - config
+          - candidate
+        description: "Datastore which will be used"
+        required: true
+        default: "startup"
+      kwarg_op:
+        type: "string"
+        immutable: true
+        default: "-"
