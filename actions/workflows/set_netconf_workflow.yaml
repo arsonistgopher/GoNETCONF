@@ -1,7 +1,7 @@
 version: '2.0'
 
-gonetconf.getworkflow:
-      description: A simple workflow which will get netconf details and return them as JSON object.
+gonetconf.setworkflow:
+      description: A simple workflow which will set netconf details and return result as JSON object.
       type: direct
       input:
         - targethost
@@ -13,11 +13,13 @@ gonetconf.getworkflow:
         - password
         - sshkey
         - clean_output
+        - lock
+        - datastore
       output:
          json_output: <% $.json_out %>
       tasks:
-        get_netconf_information:
-            action: gonetconf.get_netconf
+        set_netconf_information:
+            action: gonetconf.set_netconf
             input:
               targethost: <% $.targethost %>
               transport: <% $.transport %>
@@ -28,9 +30,11 @@ gonetconf.getworkflow:
               password: <% $.password %>
               sshkey: <% $.sshkey %>
               clean_output: <% $.clean_output %>
+              lock:  <% $.lock %>
+              datastore: <% $.datastore %>
             publish:
-                xml_out: <% task(get_netconf_information).result.stdout %>
-                stderr: <% task(get_netconf_information).result.stderr %>
+                xml_out: <% task(set_netconf_information).result.stdout %>
+                stderr: <% task(set_netconf_information).result.stderr %>
             on-success:
                - strip_new_line_chars
 
