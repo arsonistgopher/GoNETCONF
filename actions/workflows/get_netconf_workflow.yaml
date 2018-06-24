@@ -1,0 +1,62 @@
+# version: '2.0'
+#
+# gonetconf.getworkflow:
+#      description: A simple workflow which will get netconf details and return them as JSON object.
+#      type: direct
+#      input:
+#         - targethost
+#         - transport
+#         - port
+#         - envelope
+#         - envelope_file
+#         - username
+#         - password
+#         - sshkey
+#     output:
+#         stdout: <% $.stdout %>
+#     tasks:
+#         get_netconf_information:
+#             action: gonetconf.get_netconf
+#             input:
+#               targethost: <% $.targethost %>
+#               transport: <% $.transport %>
+#               port: <% $.port %>
+#               envelope: <% $.envelope %>
+#               envelope_file: <% $.envelope_file %>
+#               username: <% $.username %>
+#               password: <% $.password %>
+#               sshkey: <% $.sshkey %>
+#         publish:
+#               stdout: <% task(get_netconf_information).result.stdout %>
+#               stderr: <% task(get_netconf_information).result.stderr %>
+version: '2.0'
+
+gonetconf.getworkflow:
+    description: A simple workflow which will get netconf details and return them as JSON object.
+    type: direct
+    input:
+        - targethost
+        - transport
+        - port
+        - envelope
+        - envelope_file
+        - username
+        - password
+        - sshkey
+    output:
+        stdout: <% $.stdout %>
+    tasks:
+        get_netconf_information:
+            action: gonetconf.get_netconf
+            input:
+              targethost: <% $.targethost %>
+              transport: <% $.transport %>
+              port: <% $.port %>
+              envelope: <% $.envelope %>
+              envelope_file: <% $.envelope_file %>
+              username: <% $.username %>
+              password: <% $.password %>
+              sshkey: <% $.sshkey %>
+            publish:
+                stdout: <% task(get_netconf_information).result.stdout %>
+                stderr: <% task(get_netconf_information).result.stderr %>

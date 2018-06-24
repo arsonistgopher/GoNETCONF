@@ -1,8 +1,9 @@
-name: "get_netconf"
-runner_type: "local-shell-script"
-description: "Get Netconf Configuration"
+description: Get netconf information
 enabled: true
-entry_point: "gonetconf"
+runner_type: mistral-v2
+entry_point: workflows/get_netconf_workflow.yaml
+name: getworkflow
+pack: gonetconf
 parameters:
       targethost:
         type: "string"
@@ -42,7 +43,3 @@ parameters:
         description: "Path to a ssh_key used to authenticated"
         required: false
         default: "~/.ssh/id_rsa.pub"
-      kwarg_op:
-        type: "string"
-        immutable: true
-        default: "-"
