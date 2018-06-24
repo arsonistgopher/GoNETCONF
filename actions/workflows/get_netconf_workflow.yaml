@@ -1,40 +1,9 @@
-# version: '2.0'
-#
-# gonetconf.getworkflow:
-#      description: A simple workflow which will get netconf details and return them as JSON object.
-#      type: direct
-#      input:
-#         - targethost
-#         - transport
-#         - port
-#         - envelope
-#         - envelope_file
-#         - username
-#         - password
-#         - sshkey
-#     output:
-#         stdout: <% $.stdout %>
-#     tasks:
-#         get_netconf_information:
-#             action: gonetconf.get_netconf
-#             input:
-#               targethost: <% $.targethost %>
-#               transport: <% $.transport %>
-#               port: <% $.port %>
-#               envelope: <% $.envelope %>
-#               envelope_file: <% $.envelope_file %>
-#               username: <% $.username %>
-#               password: <% $.password %>
-#               sshkey: <% $.sshkey %>
-#         publish:
-#               stdout: <% task(get_netconf_information).result.stdout %>
-#               stderr: <% task(get_netconf_information).result.stderr %>
 version: '2.0'
 
 gonetconf.getworkflow:
-    description: A simple workflow which will get netconf details and return them as JSON object.
-    type: direct
-    input:
+      description: A simple workflow which will get netconf details and return them as JSON object.
+      type: direct
+      input:
         - targethost
         - transport
         - port
@@ -43,9 +12,10 @@ gonetconf.getworkflow:
         - username
         - password
         - sshkey
-    output:
-        stdout: <% $.stdout %>
-    tasks:
+        - clean_output
+      output:
+         json_output: <% $.json_out %>
+      tasks:
         get_netconf_information:
             action: gonetconf.get_netconf
             input:
@@ -57,6 +27,27 @@ gonetconf.getworkflow:
               username: <% $.username %>
               password: <% $.password %>
               sshkey: <% $.sshkey %>
+              clean_output: <% $.clean_output %>
             publish:
-                stdout: <% task(get_netconf_information).result.stdout %>
+                xml_out: <% task(get_netconf_information).result.stdout %>
                 stderr: <% task(get_netconf_information).result.stderr %>
+            on-success:
+               - strip_new_line_chars
+
+        strip_new_line_chars:
+            action: core.local
+            input:
+              cmd: echo "<% $.xml_out %>" | sed -r 's/(\\n|\\)//g'
+            publish:
+              xml_stripped: <% task(strip_new_line_chars).result.stdout %>
+              xml_stripped_stderr: <% task(strip_new_line_chars).result.stderr %>
+            on-success:
+               - convert_xml_to_json
+
+        convert_xml_to_json:
+          action: xml.parse
+          input:
+            data: <% $.xml_stripped %>
+          publish:
+            json_out: <% task(convert_xml_to_json).result.stdout %>
+            json_stderr: <% task(convert_xml_to_json).result.stderr %>

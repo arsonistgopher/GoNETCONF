@@ -43,3 +43,8 @@ parameters:
         description: "Path to a ssh_key used to authenticated"
         required: false
         default: "~/.ssh/id_rsa.pub"
+      clean_output:
+        type: boolean
+        description: "Clean the xml output from whitspaces and line returns"
+        required: false
+        default: true
