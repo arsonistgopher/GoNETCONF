@@ -8,11 +8,11 @@ gonetconf.setworkflow:
         - transport
         - port
         - envelope
-        - envelope_file
+        - envelopefile
         - username
         - password
         - sshkey
-        - clean_output
+        - cleanoutput
         - lock
         - datastore
       output:
@@ -25,11 +25,11 @@ gonetconf.setworkflow:
               transport: <% $.transport %>
               port: <% $.port %>
               envelope: <% $.envelope %>
-              envelope_file: <% $.envelope_file %>
+              envelopefile: <% $.envelopefile %>
               username: <% $.username %>
               password: <% $.password %>
               sshkey: <% $.sshkey %>
-              clean_output: <% $.clean_output %>
+              cleanoutput: <% $.cleanoutput %>
               lock:  <% $.lock %>
               datastore: <% $.datastore %>
             publish:
@@ -37,16 +37,6 @@ gonetconf.setworkflow:
                 stderr: <% task(set_netconf_information).result.stderr %>
             on-success:
                - strip_new_line_chars
-
-        strip_new_line_chars:
-            action: core.local
-            input:
-              cmd: echo "<% $.xml_out %>" | sed -r 's/(\\n|\\)//g'
-            publish:
-              xml_stripped: <% task(strip_new_line_chars).result.stdout %>
-              xml_stripped_stderr: <% task(strip_new_line_chars).result.stderr %>
-            on-success:
-               - convert_xml_to_json
 
         convert_xml_to_json:
           action: xml.parse

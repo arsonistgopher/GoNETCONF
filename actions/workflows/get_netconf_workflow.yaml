@@ -8,11 +8,11 @@ gonetconf.getworkflow:
         - transport
         - port
         - envelope
-        - envelope_file
+        - envelopefile
         - username
         - password
         - sshkey
-        - clean_output
+        - cleanoutput
       output:
          json_output: <% $.json_out %>
       tasks:
@@ -23,31 +23,43 @@ gonetconf.getworkflow:
               transport: <% $.transport %>
               port: <% $.port %>
               envelope: <% $.envelope %>
-              envelope_file: <% $.envelope_file %>
+              envelopefile: <% $.envelopefile %>
               username: <% $.username %>
               password: <% $.password %>
               sshkey: <% $.sshkey %>
-              clean_output: <% $.clean_output %>
+              cleanoutput: <% $.cleanoutput %>
             publish:
                 xml_out: <% task(get_netconf_information).result.stdout %>
+            publish-on-error:
                 stderr: <% task(get_netconf_information).result.stderr %>
             on-success:
-               - strip_new_line_chars
-
-        strip_new_line_chars:
-            action: core.local
-            input:
-              cmd: echo "<% $.xml_out %>" | sed -r 's/(\\n|\\)//g'
-            publish:
-              xml_stripped: <% task(strip_new_line_chars).result.stdout %>
-              xml_stripped_stderr: <% task(strip_new_line_chars).result.stderr %>
-            on-success:
                - convert_xml_to_json
+               - post_to_slack_success
+            on-error :
+               - post_to_slack_error
 
         convert_xml_to_json:
-          action: xml.parse
+            action: xml.parse
+            input:
+              data: <% $.xml_out %>
+            publish:
+              json_out: <% task(convert_xml_to_json).result.result %>
+            publish-on-error:
+              stderr: <% task(convert_xml_to_json).result.stderr %>
+            on-success:
+               - post_to_slack_success
+            on-error :
+               - post_to_slack_error
+
+        post_to_slack_success:
+          join: all
+          action: chatops.post_message
           input:
-            data: <% $.xml_stripped %>
-          publish:
-            json_out: <% task(convert_xml_to_json).result.stdout %>
-            json_stderr: <% task(convert_xml_to_json).result.stderr %>
+            channel: "#stackstorm"
+            message: "Netconf was successfully read from: <% $.targethost %> . Result:\n ```<% $.json_out %>```"
+
+        post_to_slack_error:
+          action: chatops.post_message
+          input:
+            channel: "#stackstorm"
+            message: "*ERROR*: Gonetconf was not able to read data from: <% $.targethost %>. Error: ```<% $.stderr %>```"

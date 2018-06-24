@@ -1,0 +1,20 @@
+---
+    name: "GoNetconf Sample Rule"
+    pack: "gonetconf"
+    description: "Sample rule dumping webhook payload to a file."
+    enabled: true
+
+    trigger:
+        type: "core.st2.webhook"
+        parameters:
+            url: "gonetconf"
+
+    criteria:
+        trigger.body.name:
+            pattern: "st2"
+            type: "equals"
+
+    action:
+        ref: "core.local"
+        parameters:
+            cmd: "echo \"{{trigger.body}}\" >> ~/st2.webhook_sample.out ; sync"
