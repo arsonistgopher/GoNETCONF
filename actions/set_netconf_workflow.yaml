@@ -1,0 +1,64 @@
+description: Set netconf information
+enabled: true
+runner_type: mistral-v2
+entry_point: workflows/set_netconf_workflow.yaml
+name: setworkflow
+pack: gonetconf
+parameters:
+      targethost:
+        type: "string"
+        description: "IP Address of the target device"
+        required: true
+      transport:
+        type: "string"
+        enum:
+          - ssh
+          - direct
+        description: "transport mechanism to be used"
+        required: true
+        default: "ssh"
+      port:
+        type: "integer"
+        description: "Port which will be used for the netconf call"
+        required: true
+        default: 22
+      envelope:
+        type: "string"
+        description: "Netconf data envelope"
+        required: false
+      envelope_file:
+        type: "string"
+        description: "Netconf data envelope file location"
+        required: false
+      username:
+        type: "string"
+        description: "Login user name to connect to the device"
+        required: false
+      password:
+        type: string
+        description: "Login password to connect to the device"
+        required: false
+      sshkey:
+        type: string
+        description: "Path to a ssh_key used to authenticated"
+        required: false
+        default: "~/.ssh/id_rsa.pub"
+      clean_output:
+        type: boolean
+        description: "Clean the xml output from whitspaces and line returns"
+        required: false
+        default: true
+      lock:
+        type: boolean
+        description: "Lock Datastore"
+        required: false
+        default: false
+      datastore:
+        type: "string"
+        enum:
+          - startup
+          - config
+          - candidate
+        description: "Datastore which will be used"
+        required: true
+        default: "startup"
